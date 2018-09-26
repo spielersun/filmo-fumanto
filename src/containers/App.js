@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import classes from './App.css';
 //import Radium, {StyleRoot} from 'radium';
-import Person from './Person/Person';
+//import Person from '../components/Persons/Person/Person';
+import Persons from '../components/Persons/Persons';
+import Cockpit from '../components/Cockpit/Cockpit';
+//import ErrorBoundary from '../components/ErrorBoundary/ErrorBoundary';
 
 class App extends Component {
   state = {
@@ -25,6 +28,7 @@ class App extends Component {
     // const person = Object.assign({}, this.state.person[personIndex]);
 
     person.name = event.target.value;
+    
     const persons = [...this.state.persons];
     persons[personIndex] = person;
 
@@ -46,46 +50,31 @@ class App extends Component {
   // bind is preferred
   render() {
     let persons = null;
-    let btnClass = '';
 
     if (this.state.showPersons){
       persons = (
         <div>
-          {this.state.persons.map((person, index) => {
-            return <Person 
-              click={() => this.deletePersonHandler(index)}
-              name={person.name} 
-              age={person.age}
-              key={person.id}
-              changed={(event) => this.nameChangeHandler(event, person.id)} />
-          })}
+          <Persons 
+            persons={this.state.persons}
+            clicked={this.deletePersonHandler}
+            changed={this.nameChangeHandler} />
         </div>
       );
-      btnClass = classes.Red;
+
       //style[':hover'] = {
       //  backgroundColor: 'salmon',
       //  color: 'black'
       //}
     }
     
-    const assignedClasses = [];
-
-    if (this.state.persons.length <= 2){
-      assignedClasses.push(classes.red);
-    }
-    if(this.state.persons.length <= 1){
-      assignedClasses.push(classes.bold);
-    }
-    
     return (
       //<StyleRoot>
         <div className={classes.App}>
-          <h1>Hi! This is Filmo Fumanto</h1>
-          <p className={assignedClasses.join(' ')}>Movies, movies everywhere...</p>
-          <button
-            className={btnClass}
-            onClick={this.togglePersonsHandler}>Toggle Persons</button>
-            {persons}
+          <Cockpit 
+            showPersons={this.state.showPersons} 
+            persons={this.state.persons}
+            clicked={this.togglePersonsHandler} />
+          {persons}
         </div>
       //</StyleRoot>
     );
