@@ -5,8 +5,10 @@ import classes from './App.css';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
 import Auxiliary from '../hoc/Auxiliary';
-import withClassAlter from '../hoc/withClassAlter';
+import WithClassAlter from '../hoc/WithClassAlter';
 //import ErrorBoundary from '../components/ErrorBoundary/ErrorBoundary';
+
+export const AuthContext = React.createContext(false);
 
 class App extends PureComponent {
   constructor(props){
@@ -21,10 +23,12 @@ class App extends PureComponent {
       ],
       otherState: 'some value',
       showPersons: false,
-      toggleClicked: 0
+      toggleClicked: 0,
+      authenticated: false
     };
   }
 
+  // Avoid
   componentWillMount(){
     console.log('[App.js] Inside componentWillMount()');
   }
@@ -39,8 +43,19 @@ class App extends PureComponent {
     //   nextState.showPersons !== this.state.showPersons;
   // }
 
+  // Avoid
   componentWillUpdate(nextProps, nextState){
     console.log('[UPDATE App.js] Inside componentWillUpdate()', nextProps, nextState);
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState){
+    console.log('[UPDATE App.js] Inside getDerivedStateFromProps()', nextProps, prevState);
+    
+    return prevState;
+  }
+
+  getSnapshotBeforeUpdate(){
+    console.log('[UPDATE App.js] Inside getDerivedStateFromProps()');
   }
 
   componentDidUpdate(){
@@ -92,6 +107,10 @@ class App extends PureComponent {
     });
   }
 
+  loginHandler = () => {
+    this.setState({authenticated: true})
+  }
+
   // bind is preferred
   render() {
     console.log('[App.js] Inside render()');
@@ -103,7 +122,9 @@ class App extends PureComponent {
           <Persons 
             persons={this.state.persons}
             clicked={this.deletePersonHandler}
-            changed={this.nameChangeHandler} />
+            changed={this.nameChangeHandler} 
+            //isAuthenticated={this.state.authenticated} 
+          />
         </div>
       );
 
@@ -121,8 +142,11 @@ class App extends PureComponent {
             appTitle={this.props.title}
             showPersons={this.state.showPersons} 
             persons={this.state.persons}
+            login={this.loginHandler}
             clicked={this.togglePersonsHandler} />
-          {persons}
+          <AuthContext.Provider value={this.state.authenticated}>
+            {persons}
+          </AuthContext.Provider>
         </Auxiliary>
       //</StyleRoot>
     );
@@ -130,4 +154,4 @@ class App extends PureComponent {
   }
 }
 
-export default withClassAlter(App, classes.App);
+export default WithClassAlter(App, classes.App);

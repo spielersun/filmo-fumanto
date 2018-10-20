@@ -1,6 +1,6 @@
 import React from 'react';
-import classes from './cockpit.css';
-import Auxiliary from '../hoc/Auxiliary';
+import classes from './Cockpit.css';
+import Auxiliary from '../../hoc/Auxiliary';
 
 const cockpit = (props) => {
     const assignedClasses = [];
@@ -25,6 +25,7 @@ const cockpit = (props) => {
             <button
                 className={btnClass}
                 onClick={props.clicked}>Toggle Persons</button>
+            <button onClick={props.login}>Log In</button>
         </Auxiliary>
     );
 }
